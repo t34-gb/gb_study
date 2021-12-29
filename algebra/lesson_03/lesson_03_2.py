@@ -1,5 +1,4 @@
 from pylab import *
-from scipy.optimize import fsolve
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -24,8 +23,6 @@ plt.title('График функции: y=k*cos(x-a)+bv')
 plt.grid(True)
 plt.show()
 print('*' * 100)
-
-
 # ===================================================================================
 
 
@@ -66,6 +63,15 @@ plt.ylabel('y')
 plt.scatter(0, 0, c='r')
 plt.title(f'Окружность в декартовых координатах через полярные координаты: r = {r}')
 plt.grid(True)
+plt.show()
+
+t = np.linspace(0, np.pi, 360)
+x = np.cos(t)
+y = np.sin(t)
+rho = np.sqrt(x**2+y**2)
+phi = np.arctan2(y, x)*180/np.pi
+plt.polar(phi, rho)
+plt.title(f'Окружности в полярных координатах: r = {r}')
 plt.show()
 
 plt.figure()
@@ -138,35 +144,12 @@ elif C == 0:
 plt.thetagrids([theta * 30 for theta in range(360 // 30)])  # сетка лучей
 plt.title(f'График прямой {A}x + {B}y + {C} = 0 в полярных координатах.')
 plt.show()
-print('*' * 100)
-# ==================================================================================
 
-print('Задание № 4.1. Численное и графическое решение системы уравнений:\n'
-      ' exp(x)+x(1-y)=1 и y=x^2-1')
-
-
-def equations(p_):
-    x_, y_ = p_
-    return y_ - x_ ** 2 + 1, np.exp(x_) + x_ * (1 - y_) - 1
-
-
-x1, y1 = fsolve(equations, (-2, 2))
-print('x1, y1: ', x1, y1)
-x2, y2 = fsolve(equations, (2, 5))
-print('x2, y2: ', x2, y2)
-
-x = np.linspace(-2, 3, 201)
-plt.plot(x, 1 + (np.exp(x) - 1) / x)
-plt.plot(x, x ** 2 - 1)
-plt.xlabel('x')
-plt.ylabel('y')
-plt.ylim(-2, 8)
-plt.grid(True)
+t = np.linspace(0, np.pi, 360)
+x = np.sin(t)
+y = np.sin(t)
+rho = np.sqrt(x**2+y**2)
+phi = np.arctan2(y, x)*180/np.pi
+plt.polar(phi, rho)
+plt.title(f'График прямой в полярных координатах.')
 plt.show()
-print('*' * 100)
-# ==================================================================================
-
-print('Задание № 4.2. Численное и графическое решение системы неравенств:\n'
-      ' exp(x)+x(1-y)-1>0 и y=x^2-1')
-
-print(f'Область решений:\n y=x^2-1 для x!=0, x=({x1}, {x2})')
