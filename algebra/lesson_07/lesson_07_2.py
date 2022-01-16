@@ -1,0 +1,148 @@
+# -*- coding: utf-8 -*-
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.linalg
+
+print('Задание № 1: Решите линейную систему.')
+A = np.array([[1, 2, 3], [4, 0, 6], [7, 8, 9]])
+B = np.array([12, 2, 1])
+print(A)
+print(B)
+
+X = np.linalg.solve(A, B)
+print('Вариант решения СЛАУ (np.linalg.solve(A, B)): ', X)
+A_ = np.linalg.inv(A)
+X = np.dot(A_, B)
+print('Вариант решения СЛАУ (X=A_*B): ', X)
+
+print()
+print('=*'*50)
+print('Задание № 2: Найдите псевдорешение.')
+A = np.array([[1, 2, -1], [3, -4, 0], [8, -5, 2], [2, 0, -5], [11, 4, -7]])
+B = np.array([1, 7, 12, 7, 15])
+
+X = np.linalg.lstsq(A, B)
+print(X)
+B1 = np.dot(A, X[0])
+print('Проверка решения (B=A*X): ', B1)
+B0 = B1 - B
+print('Невязка решений (B0=B1-B): ', B0)
+print('Коэффициент невязки (X[1]): ', X[1])
+print('Коэффициент невязки (np.linalg.norm(B0)**2): ', np.linalg.norm(B0)**2)
+
+print()
+print('=*'*50)
+print('Задание № 3: Сколько решений имеет линейная система.')
+A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+B = np.array([[12, 2, 1]])
+print(A)
+print(B)
+print(f'det_A = {np.linalg.det(A)}')
+
+C = np.concatenate((A, B.T), axis=1)
+print(C)
+rank_A = np.linalg.matrix_rank(A, 0.0001)
+rank_C = np.linalg.matrix_rank(C, 0.0001)
+print(f'rank_A = {rank_A}, rank_C = {rank_C}')
+if rank_A == rank_C:
+    print('СЛАУ совместная! ', end='')
+    if rank_A < len(B[0 ]):
+        print('Имеет бесконечное число решений.')
+    else:
+        print('Имеет единственное решение.')
+else:
+    print('СЛАУ несовместная! ')
+
+B = np.array([[0, 0, 0]])
+C = np.concatenate((A, B.T), axis=1)
+print(C)
+rank_A = np.linalg.matrix_rank(A, 0.0001)
+rank_C = np.linalg.matrix_rank(C, 0.0001)
+print(f'rank_A = {rank_A}, rank_C = {rank_C}')
+if rank_A == rank_C:
+    print('СЛАУ совместная! ', end='')
+    if rank_A < len(B[0]):
+        print('Имеет бесконечное число решений.')
+    else:
+        print('Имеет единственное решение.')
+else:
+    print('СЛАУ несовместная! ')
+
+# X = np.linalg.solve(A, B)
+B = np.array([0, 0, 0])
+X = np.linalg.lstsq(A, B)
+print(X)
+
+print()
+print('=*'*50)
+print('Задание № 4: Вычислите LU-разложение матрицы.')
+A = np.array([[1, 2, 3], [2, 16, 21], [4, 28, 73]])
+print('det A = ', np.linalg.det(A))
+P, L, U = scipy.linalg.lu(A)
+print('Исходная матрица')
+print(A)
+print('Матрица перестановок')
+print(P)
+print('Нижняя треугольная матрица')
+print(L)
+print('Верхняя треугольная матрица')
+print(U)
+print('Решение СЛАУ: ')
+B = np.array([4, 1, 7])
+print(np.linalg.solve(A, B))
+
+print()
+print('=*'*50)
+print('Задание № 5: Найдите нормальное псевдорешение недоопределенной системы.')
+A = np.array([[1, 2, -1], [8, -5, 2]])
+B = np.array([1, 12])
+# print('det A = ', np.linalg.det(A))
+print('det A = ', np.linalg.lstsq(A, B))
+
+X = np.array([])
+y = np.linspace(-3, 3, 201)
+plt.plot(y, (-0.1*y+1.4)**2+y**2+(0.4+2.9*y)**2)
+plt.xlabel('x2')
+plt.ylabel('f(x)')
+plt.plot([-0.18, -0.18], [-20, 80], color='red', linewidth=0.75, linestyle="--")
+plt.grid(True)
+plt.title('График функции невязки вектора X = [-0.1*y+1.4, y, 0.4+2.9*y]')
+plt.show()
+
+print()
+print('=*'*50)
+print('Задание № 6:  Найдите одно из псевдорешений вырожденной системы.')
+A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+B = np.array([2, 5, 11])
+Q, R = np.linalg.qr(A)
+print('Исходная матрица')
+print(A)
+print()
+print('Ортогональная матрица')
+print(Q)
+print()
+print('Верхняя треугольная матрица')
+print(R)
+print()
+print('Проверка правильности QR-разложения A=Q*R')
+print(np.dot(Q, R))
+print()
+print('Проверка условия для ортогональной матрицы Q: E=Q.T*Q')
+print(np.dot(np.transpose(Q), Q))
+print()
+R1 = R[:2, :2]
+print(R1)
+print()
+B1 = np.dot(np.transpose(Q), B)[:2]
+print(B1)
+
+print()
+X1 = np.linalg.solve(R1, B1)
+print('Псевдорешение для R1*X1=Q.T*B1: ', X1)
+print()
+X = np.append(X1, 0)
+print('Псевдорешение для исходной системы уравнений: ', X)
+print(np.linalg.norm(X))
+print()
+print('Невязка для псевдорешения: ', np.linalg.norm(np.dot(A, X)-B))
+print()
